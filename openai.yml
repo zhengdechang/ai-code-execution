@@ -1,0 +1,103 @@
+{
+  "openapi": "3.1.0",
+  "info":
+    {
+      "title": "Code Execution API",
+      "description": "Execute arbitrary Python code with optional package installation.",
+      "version": "v1.0.0",
+    },
+  "servers": [{ "url": "http://342e0169.r26.cpolar.top" }],
+  "paths":
+    {
+      "/execute":
+        {
+          "post":
+            {
+              "summary": "Execute Python code",
+              "description": "Executes Python code with optional required packages.",
+              "operationId": "ExecutePythonCode",
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            {
+                              "type": "object",
+                              "properties":
+                                {
+                                  "code":
+                                    {
+                                      "type": "string",
+                                      "description": "The Python code to execute",
+                                    },
+                                  "required_packages":
+                                    {
+                                      "type": "array",
+                                      "items": { "type": "string" },
+                                      "description": "Optional list of required Python packages to install before execution",
+                                    },
+                                },
+                              "required": ["code"],
+                            },
+                          "example":
+                            {
+                              "code": "print('Hello, world!')",
+                              "required_packages": ["numpy"],
+                            },
+                        },
+                    },
+                },
+              "responses":
+                {
+                  "200":
+                    {
+                      "description": "Execution result",
+                      "content":
+                        {
+                          "application/json":
+                            {
+                              "schema":
+                                {
+                                  "type": "object",
+                                  "properties":
+                                    {
+                                      "success": { "type": "boolean" },
+                                      "output": { "type": "string" },
+                                      "error": { "type": "string" },
+                                    },
+                                },
+                              "examples":
+                                {
+                                  "success":
+                                    {
+                                      "summary": "Successful execution",
+                                      "value":
+                                        {
+                                          "success": true,
+                                          "output": "Hello, world!\n",
+                                        },
+                                    },
+                                  "error":
+                                    {
+                                      "summary": "Execution error",
+                                      "value":
+                                        {
+                                          "success": false,
+                                          "error": "NameError: name 'x' is not defined",
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                  "400": { "description": "Invalid request" },
+                  "500": { "description": "Internal server error" },
+                },
+            },
+        },
+    },
+  "components": {},
+}
