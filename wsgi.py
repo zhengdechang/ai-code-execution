@@ -10,6 +10,8 @@ KERNEL_URL = os.getenv("KERNEL_URL", "http://localhost:8888")
 
 app = Flask(__name__)
 
+print(f"KERNEL_URL: {KERNEL_URL}")
+
 # 异步执行代码
 async def run_code(code: str, required_packages=None):
     async with KernelClient(KERNEL_URL) as client:

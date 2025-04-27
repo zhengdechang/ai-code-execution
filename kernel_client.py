@@ -16,6 +16,7 @@ class KernelClient:
     
     def __init__(self, base_url: str):
         self.base_url = base_url.rstrip('/')
+        self.server_url = self.base_url.replace("http://", "").replace("https://", "")
         self.session = None
         self.kernel_id = None
         self.ws = None
@@ -37,7 +38,7 @@ class KernelClient:
             self.kernel_id = kernel_info['id']
         
         # Connect to kernel WebSocket
-        ws_url = f"ws://localhost:8888/api/kernels/{self.kernel_id}/channels"
+        ws_url = f"ws://{self.server_url}/api/kernels/{self.kernel_id}/channels"
         self.ws = await self.session.ws_connect(ws_url)
     
     async def shutdown(self):

@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  ai-code-execution-jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: codedevin/ai-code-execution-jupyter:v1.0
+    ports:
+      - "0.0.0.0:8888:8888"
+    environment:
+      - JUPYTER_KERNEL_GATEWAY_KERNEL_SECURITY_CLASS=kernel_security.KernelSecurity
+    networks:
+      - ai-code-network
+    restart: unless-stopped
+
+  ai-code-execution:
+    build:
+      context: .
+      dockerfile: Dockerfile.wsgi
+    image: codedevin/ai-code-execution:v1.0
+    ports:
+      - "0.0.0.0:5050:5000"
+    environment:
+      - KERNEL_URL=http://ai-code-execution-jupyter:8888
+    networks:
+      - ai-code-network
+    depends_on:
+      - ai-code-execution-jupyter
+    restart: unless-stopped
+
+networks:
+  ai-code-network:
+    driver: bridge
